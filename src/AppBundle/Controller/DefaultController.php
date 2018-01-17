@@ -6,6 +6,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class DefaultController extends Controller
 {
@@ -29,13 +31,39 @@ class DefaultController extends Controller
 		if (isset($params["repository"])) {
 			if (isset($params["repository"]["name"]) && isset($params["repository"]["links"])){
 				if (isset($params["repository"]["links"]["html"])){
-					return new JsonResponse(array(
-						"name" => $params["repository"]["name"],
-						"crawling" => $params["repository"]["links"]["html"]
-					));
+					$repo = $params["repository"]["name"];
+					$link = $params["repository"]["links"]["html"];
+					$ret = $this->gitFetch($repo);
+		      return new JsonResponse(array("ret" => $ret));
 				}
 			}
 		}
 		return new JsonResponse(array("ret" => "parse error"));
+	}
+	/**
+	 * @Route("/shell", name="shellCommand")
+	 */
+	public function shellAction(Request $request)
+	{
+		$process = new Process('pwd');
+		$process->run();
+
+		if (!$process->isSuccessful()) {
+			throw new ProcessFailedException($process);
+		}
+
+		return new JsonResponse(array("ret" => $process->getOutput()));
+	}
+
+	private function gitFetch($rep)
+	{
+		$process = new Process('cd ~ && ./gitfetch.sh ' . $rep );
+		$process->run();
+
+		// executes after the command finishes
+		if (!$process->isSuccessful()) {
+			throw new ProcessFailedException($process);
+		}
+		return $process->getOutput();
 	}
 }
