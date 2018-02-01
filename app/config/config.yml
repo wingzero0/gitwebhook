@@ -88,7 +88,7 @@ gearman:
             # Otherwise, full Bundle will be parsed
             include:
                 - Services
-                - EventListener
+                #- EventListener
 
             # Namespaces this Bundle will ignore when parsing
             ignore:
