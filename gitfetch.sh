@@ -2,5 +2,5 @@
 
 repo=$1
 
-cd git/$repo
+cd gitRepos/$repo
 git fetch --all
