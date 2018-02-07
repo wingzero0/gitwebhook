@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Mmoreram\GearmanBundle\Service\GearmanClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,14 +41,13 @@ class WebhookController extends Controller
 	 */
 	public function shellAction(Request $request)
 	{
-		$process = new Process('cd ' . $this->git_repo_local_path . " && pwd");
-		$process->run();
+	    /* @var GearmanClient $gearman */
+	    $gearman = $this->container->get('gearman');
+        $result = $gearman
+            ->doNormalJob('AppBundleServicesGitWorkerDummy~fetchRemoteJobDummy', json_encode(array('repo' => 'sucks')));
 
-		if (!$process->isSuccessful()) {
-			throw new ProcessFailedException($process);
-		}
-
-		return new JsonResponse(array("ret" => $process->getOutput()));
+        $returnCode = $gearman->getReturnCode();
+        return new JsonResponse(array("ret" => $returnCode));
 	}
 
 	private function gitFetch($rep)
