@@ -29,11 +29,15 @@ services:
         public: true
         tags: ['controller.service_arguments']
     
-    AppBundle\Controller\WebhookController:
-        arguments:
-            - '%git_repo_local_path%'
+#    AppBundle\Controller\WebhookController:
+#        arguments:
+#            - '%git_repo_local_path%'
 
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+
+    AppBundle\Services\GitWorker:
+        arguments:
+            - 'shit'
