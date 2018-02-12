@@ -9,3 +9,7 @@ Symfony Standard Edition
     
 ## run build-in server
     php bin/console server:start 0.0.0.0:8000
+    
+# git repo init
+repo must created by 
+    git clone REMOTE_URL --mirror
