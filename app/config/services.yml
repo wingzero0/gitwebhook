@@ -38,6 +38,5 @@ services:
     #     arguments:
     #         $someArgument: 'some_value'
 
-    AppBundle\Services\GitWorker:
-        arguments:
-            - 'shit'
+#    gitworker:
+#        class: AppBundle\Services\GitWorker

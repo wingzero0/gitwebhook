@@ -5,6 +5,8 @@ namespace AppBundle\Services;
 use Mmoreram\GearmanBundle\Driver\Gearman;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @Gearman\Work(
@@ -14,13 +16,14 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
  *     defaultMethod = "doBackground",
  * )
  */
-class GitWorker
+class GitWorker implements ContainerAwareInterface
 {
     private $git_repo_local_path;
+    private $container;
 
-    public function __construct($git_repo_local_path)
+    public function setContainer(ContainerInterface $container = null)
     {
-        $this->git_repo_local_path = $git_repo_local_path;
+        $this->container = $container;
     }
 
     /**
@@ -38,8 +41,11 @@ class GitWorker
     public function fetchRemote(\GearmanJob $job)
     {
         $data = json_decode($job->workload(),true);
-        $this->git_repo_local_path = '/home/webmaster/git';
+        //$this->git_repo_local_path = '/home/webmaster/git';
+        $this->git_repo_local_path = $this->container->getParameter('git_repo_local_path');
         echo $data['repo'] . "\n" . $this->git_repo_local_path . "\n" . PHP_EOL;
+        $processOuput = $this->gitFetch($data['repo']);
+        print_r($processOuput);
 
         return true;
     }
