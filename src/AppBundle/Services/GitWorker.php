@@ -52,7 +52,7 @@ class GitWorker implements ContainerAwareInterface
 
     private function gitFetch($rep)
     {
-        $process = new Process('cd ' . $this->git_repo_local_path . ' && ./gitfetch.sh ' . $rep );
+        $process = new Process('cd ' . $this->git_repo_local_path . ' && ./gitfetch.sh ' . $rep . '.git' );
         $process->run();
 
         // executes after the command finishes

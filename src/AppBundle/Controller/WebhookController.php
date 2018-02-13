@@ -27,7 +27,7 @@ class WebhookController extends Controller
                     /* @var GearmanClient $gearman */
                     $gearman = $this->container->get('gearman');
                     $result = $gearman
-                        ->doNormalJob('AppBundleServicesGitWorkerDummy~fetchRemoteJobDummy', json_encode(array('repo' => $repo)));
+                        ->doBackgroundJob('AppBundleServicesGitWorkerDummy~fetchRemoteJobDummy', json_encode(array('repo' => $repo)));
 
                     $returnCode = $gearman->getReturnCode();
                     return new JsonResponse(array("ret" => $returnCode));
@@ -43,7 +43,7 @@ class WebhookController extends Controller
 	{
         $gearman = $this->container->get('gearman');
         $result = $gearman
-            ->doNormalJob('AppBundleServicesGitWorkerDummy~fetchRemoteJobDummy', json_encode(array('repo' => 'sucks')));
+            ->doBackgroundJob('AppBundleServicesGitWorkerDummy~fetchRemoteJobDummy', json_encode(array('repo' => 'sucks')));
 
         $returnCode = $gearman->getReturnCode();
         return new JsonResponse(array("ret" => $returnCode));
